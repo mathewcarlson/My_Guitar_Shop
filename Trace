@@ -173,6 +173,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE
 ON mgs.*
 TO mgs_user@localhost;
 
+############################################################################################
 #Part 2
 #Question 1
 SELECT product_name FROM products;
@@ -223,6 +224,7 @@ SELECT 100 AS price,
 100 * .07 AS tax_amount,
 (100) + (100 * .07) AS Total;
 
+##################################################################
 #Part 3
 #Question 1
 SELECT product_name, category_name, list_price
@@ -230,4 +232,75 @@ FROM products JOIN categories
 ON categories.category_id = Products.category_id
 --WHERE category_name = 'Guitars'
 ORDER BY category_name, product_name
+
+
+
+
+
+
+#######################################################################
+#Part 6: Question 1
+SELECT category_name
+FROM categories 
+WHERE category_id IN (SELECT  DISTINCT category_id from
+products)
+ORDER BY category_name;
+
+#Question 2
+SELECT product_name, list_price
+FROM products
+WHERE list_price > (SELECT AVG(list_price) FROM products
+WHERE list_price > 0)
+ORDER BY list_price DESC;
+
+#Question 3
+select category_name
+from categories c
+where not exists (select 1 from products p where p.category_id
+= c.category_id);
+
+#Question 4
+select email_address, orders.order_id, SUM((item_price-discount_amount) * quantity) 
+as OrderTotal
+from order_items join orders
+on order_items.order_id = orders.order_id
+join customers on orders.customer_id= customers.customer_id
+group by email_address, orders.order_id;
+
+select customers.email_address, MAX(OrderTotal) as LargestOrder
+from customers join
+(select email_address, orders.order_id, SUM((item_price-discount_amount) * quantity) 
+as OrderTotal
+from order_items join orders
+on order_items.order_id = orders.order_id
+join customers on orders.customer_id= customers.customer_id
+group by email_address, orders.order_id) as CustomerTotals
+on customers.email_address = CustomerTotals.email_address
+group by customers.email_address
+order by LargestOrder DESC;
+
+
+#Question 5
+select product_name, discount_percent
+from products
+where discount_percent in (select discount_percent
+from products group by discount_percent having count(*) = 1)
+order by product_name;
+
+#Question 6
+select email_address, order_id, order_date
+from customers as T natural join orders
+where order_date = 
+  (select min(order_date)
+  from orders as S
+  where T.customer_id = S.customer_id
+)
+order by order_date, order_id;
+
+
+
+
+
+
+
 
