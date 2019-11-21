@@ -233,7 +233,53 @@ ON categories.category_id = Products.category_id
 --WHERE category_name = 'Guitars'
 ORDER BY category_name, product_name
 
+#########################################################################################################
+#part 4
+#Question 1
+insert into categories(category_id, category_name)
+value
+('5', 'Brass');
 
+#Question 2
+UPDATE categories
+set category_name = 'woodwinds'
+where category_id = '5';
+
+#Question 3
+delete from categories
+where category_id = '5';
+
+#Question 4
+insert into products(product_id, category_id, product_code, product_name, description, list_price, discount_percent, date_added)
+value
+('11', '4', 'dgx_640', 'Yamaha DGX 640 88-key Digital Piano', 'long description to come', '799.99', '0', '2019-11-20 14:15:16');
+
+#Question 5
+update products
+set discount_percent = '35'
+where category_id = '4';
+
+#Question 6
+delete from products
+where category_id = '4';
+delete from categories
+where category_id = '4';
+
+#Question 7
+insert into customers(email_address, password, first_name, last_name)
+value
+('rick@raven.com', '', 'Rick', 'Raven');
+select * from customers;
+
+ #Question 8
+update customers
+set password = 'secret'
+where email_address = 'rick@raven';
+
+#Question 9
+update customers
+set password = 'reset'
+limit 100;
 
 ##################################################################
 #Part 5
