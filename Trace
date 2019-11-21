@@ -193,17 +193,16 @@ WHERE list_price > 500 AND list_price < 2000
 ORDER BY date_added DESC;
 
 #Question 4
-SELECT product_name, list_price, discount_percent, discount_amount, discount_price
-FROM product 
-ORDER BY discount_price DESC limit 5;
-
-
-
+SELECT product_name, list_price, discount_percent,
+round(discount_percent / 100 * list_price, 2) AS discount_amount,
+round((list_price - discount_percent / 100 * list_price), 2) as discount_price
+ FROM products 
+ORDER BY discount_price LIMIT 5;
 
 #Question 5
 SELECT item_id, item_price discount_amount, quantity,
 item_price * Quantity AS price_total,
-discount_amount * Quantity AS discount_total,
+discount_amount * quantity AS discount_total,
 (item_price - discount_amount) * Quantity AS item_total
 FROM order_items
 WHERE (item_price - discount_amount) * Quantity > 500
@@ -215,7 +214,9 @@ FROM Orders
 WHERE ship_date IS NULL;
 
 #Question 7
-
+SELECT
+NOW() AS 'today_unformatted',
+DATE_FORMAT(NOW(), '%d-%m-%Y') AS 'today_formatted';
 
 #Question 8
 SELECT 100 AS price,
@@ -227,7 +228,52 @@ SELECT 100 AS price,
 #Question 1
 SELECT product_name, category_name, list_price
 FROM products JOIN categories
-ON categories.category_id = Products.category_id
---WHERE category_name = 'Guitars'
-ORDER BY category_name, product_name
+ON categories.category_id = products.category_id
+WHERE category_name = 'Guitars'
+ORDER BY category_name, product_name;
+
+#Question 2
+SELECT first_name, last_name,
+line1, city, state, zip_code
+FROM customers JOIN addresses ON
+customers.customer_id = addresses.customer_id
+WHERE customers.email_address = 'allan.sherwood@yahoo.com';
+
+#Question 3
+SELECT first_name, last_name, line1, city, state, zip_code
+FROM customers
+JOIN addresses ON customers.customer_id = addresses.customer_id
+AND customers.shipping_address_id = addresses.address_id;
+
+#Question 4
+SELECT c.last_name,c.first_name, order_date, p.product_name, item_price, discount_amount, quantity
+FROM customers AS c
+JOIN Orders AS o ON c.customer_id = o.customer_id
+JOIN order_items AS oi ON o.order_id = oi.order_id
+JOIN Products AS p ON oi.product_id = p.product_id
+ORDER BY last_name, order_date, product_name;
+
+#Question 5
+SELECT p1.product_id, p1.product_name, p1.list_price
+FROM products AS p1
+JOIN products AS p2 ON
+p1.product_id <> p2.product_id
+AND
+p1.list_price = p2.list_price;
+
+#Question 6
+SELECT category_name, product_id
+FROM categories LEFT JOIN products
+ON categories.category_id = products.category_id
+WHERE product_id IS NULL;
+
+#Question 7
+SELECT 'SHIPPED' AS ship_status, order_id, order_date
+FROM orders
+WHERE ship_date IS NOT NULL
+UNION
+SELECT 'NOT SHIPPED', order_id, order_date
+FROM orders
+WHERE ship_date IS NULL
+ORDER BY order_date;
 
