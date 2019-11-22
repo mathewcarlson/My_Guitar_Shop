@@ -330,14 +330,53 @@ limit 100;
 ##################################################################
 #Part 5
 #Question 1
+SELECT COUNT(*) as order_id, sum(tax_amount) as tax_amount from orders;
 
 #Question 2
+SELECT category_name, COUNT(category_id) AS Count, MAX(list_price) AS mostexpensive
+FROM categories
+Join products 
+ON 
+categories.category_id = products.category_id 
+GROUP BY category_name
+Order By COUNT(product_id) DESC;
 
 #Question 3
+SELECT customers.email_address, SUM(order_items.item_price * order_items.quantity) AS itemPriceTotal, SUM(order_items.discount_amount * order_items.quantity) AS discountAmountTotal
+FROM customers  
+JOIN order_items
+ON
+order_items.id = customers.id 
+GROUP BY customers.email_address 
+ORDER BY (item_price) DESC;
 
 #Question 4
+SELECT email_address, COUNT(orders.order_id) AS orderCount, (SUM(item_price) - SUM(discount_amount)) * SUM(quantity) AS totalAmount
+FROM customers
+JOIN orders
+ON
+customers.customer_id = orders.customer_id
+JOIN order_items
+ON
+orders.order_id = order_items.order_id
+GROUP BY email_address
+HAVING COUNT(orders.order_id) > 1
+ORDER BY SUM(item_price) DESC;
 
 #Question 5
+SELECT email_address, COUNT(orders.order_id) AS orderCount, (SUM(item_price) - SUM(discount_amount)) * SUM(quantity) AS totalAmount
+FROM customers
+JOIN orders
+ON
+customers.customer_id = orders.customer_id
+JOIN order_items
+ON
+orders.order_id = order_items.order_id
+WHERE orders_items.item_price > 400
+GROUP BY email_address
+HAVING COUNT(orders.order_id) > 1
+ORDER BY SUM(item_price) DESC;
+#Might have error, order/order_items need to double check
 
 #Question 6
 
