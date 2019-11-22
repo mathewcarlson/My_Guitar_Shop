@@ -379,8 +379,19 @@ ORDER BY SUM(item_price) DESC;
 #Might have error, order/order_items need to double check
 
 #Question 6
+SELECT product_name, SUM((item_price - discount_amount) * quantity) AS productTotal
+FROM products
+JOIN order_items ON products.product_id = order_items.product_id
+GROUP BY product_name WITH ROLLUP;
+#Idk if this is all you need for rollup
 
 #Question 7
+SELECT email_address, COUNT(*)
+FROM customers, orders
+WHERE customers.customer_id = orders.customer_id
+GROUP BY email_address
+HAVING COUNT(*)>1
+ORDER BY email_address;
 
 #Question 8
 
