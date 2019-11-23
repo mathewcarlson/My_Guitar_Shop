@@ -346,7 +346,7 @@ SELECT customers.email_address, SUM(order_items.item_price * order_items.quantit
 FROM customers  
 JOIN order_items
 ON
-order_items.id = customers.id 
+order_items.order_id = customers.customer_id
 GROUP BY customers.email_address 
 ORDER BY (item_price) DESC;
 
