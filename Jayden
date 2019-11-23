@@ -393,11 +393,21 @@ HAVING COUNT(*)>1
 ORDER BY email_address;
 
 #Question 8
-
+select category_name, product_name, sum(quantity) as Total
+from products join  categories on products.category_id = categories.category_id
+join order_items on order_items.product_id = products.product_id
+group by category_name, product_name;
 #Question 9
-
+select order_id, sum((item_price - discount_amount) * quantity) as total_amount
+from order_items
+group by order_id 
+order by order_id asc;
 #Question 10
-
+select order_id, sum((item_price - discount_amount) * quantity) as total_amount,
+avg(item_price) as average_amount
+from order_items
+group by order_id 
+order by order_id asc;
 #Question 11
 
 
